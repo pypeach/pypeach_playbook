@@ -2,7 +2,6 @@
 - hosts: app_server
   remote_user: "{{ remote_user_name }}"
   become: true
-  become_method: sudo
   roles:
     - account
     - python

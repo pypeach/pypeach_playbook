@@ -10,24 +10,6 @@
       - gettext
 
 - block:
-    - name: セットアップ用ディレクトリ作成
-      file:
-        path: "{{ setting_files_dir }}"
-        owner: "{{ user_name }}"
-        group: "{{ group_name }}"
-        mode: 0755
-        state: directory
-
-    - name: セットアップ用ファイルをコピー
-      copy:
-        src: "{{ role_path }}/files/{{ item }}"
-        dest: "{{ setting_files_dir }}"
-        owner: "{{ user_name }}"
-        group: "{{ group_name }}"
-        mode: '0644'
-      with_items:
-        - requirements.txt
-
     - name: pyenvの存在チェック
       command: test -x {{ home_dir }}/.pyenv/bin/pyenv
       register: pyenv_present
@@ -75,17 +57,22 @@
         name: pip
         state: latest
 
-    - name: python{{ install_python_version }}のrequirementsインストール
+    - name: python{{ install_python_version }}のモジュールインストール
       pip:
-        requirements: "{{ setting_files_dir }}/requirements.txt"
+        name:
+          - beautifulsoup4==4.6.0
+          - Django==2.1.5
+          - django-admin-tools==0.8.1
+          - django-bootstrap-form==3.4
+          - lxml==4.3.0
+          - mysqlclient==1.4.2
+          - pytz==2018.9
+          - PyYAML==3.12
+          - pytest==4.1.1
+          - pytest-django==3.4.5
 
     - name: pythonインターセプタ変更
       set_fact: ansible_python_interpreter=/usr/bin/python
-
-    - name: セットアップ用ディレクトリ削除
-      file:
-        path: "{{ setting_files_dir }}"
-        state: absent
 
   become: yes
   become_user: "{{ user_name }}"
