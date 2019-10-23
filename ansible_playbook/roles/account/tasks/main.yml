@@ -1,0 +1,58 @@
+---
+- name: グループ追加
+  group:
+    name: "{{ group_name }}"
+    gid: "{{ group_gid }}"
+
+- name: ユーザ追加
+  user:
+    name: "{{ user_name }}"
+    group: "{{ group_name }}"
+    groups: "{{ group_name }},sudo"
+    uid: "{{ user_uid }}"
+    password: "{{ user_password | password_hash('sha512') }}"
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_passphrase: "{{ user_ssh_key_passphrase }}"
+  register: ssh_user
+
+- name: SSH公開鍵作成
+  authorized_key:
+    user: "{{ user_name }}"
+    state: present
+    key: "{{ ssh_user.ssh_public_key }}"
+
+- name: パスワード認証の無効化
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    insertafter: "^#PasswordAuthentication"
+    line: "PasswordAuthentication no"
+
+- name: チャレンジ・レスポンス認証の無効化
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ChallengeResponseAuthentication"
+    insertafter: "^#ChallengeResponseAuthentication"
+    line: "ChallengeResponseAuthentication no"
+
+- name: rootユーザのログイン禁止
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    insertafter: "^#PermitRootLogin"
+    line: "PermitRootLogin no"
+
+- name: sshdサービスの再起動
+  service:
+    name: sshd
+    state: restarted
+
+- name: 初期ディレクトリ作成
+  file:
+    path: "/home/{{ user_name }}/{{ item.dir_name }}"
+    owner: "{{ user_name }}"
+    group: "{{ group_name }}"
+    mode: "{{ item.dir_mode }}"
+    state: directory
+  with_items: "{{ user_dir_info }}"

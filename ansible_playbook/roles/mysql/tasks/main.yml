@@ -1,0 +1,61 @@
+---
+- name: mysql関連のパッケージインストール
+  apt:
+    force_apt_get: yes
+    state: latest
+    name:
+      - mysql-server-5.7
+      - mysql-client-5.7
+      - python-mysqldb
+
+- name: rootユーザのパスワード設定
+  mysql_user:
+    login_user: "{{ admin_user_name }}"
+    login_password: "{{ admin_user_password }}"
+    name: "{{ admin_user_name }}"
+    password: "{{ admin_user_password }}"
+    check_implicit_admin: yes
+    state: present
+
+- name: 匿名ユーザ削除
+  mysql_user:
+    login_user: "{{ admin_user_name }}"
+    login_password: "{{ admin_user_password }}"
+    name: ''
+    host_all: yes
+    state: absent
+
+- name: mysql接続時の文字コードセット
+  lineinfile:
+    path: /etc/mysql/conf.d/mysql.cnf
+    insertafter: '\[mysqld\]'
+    line: 'default-character-set=utf8mb4'
+
+- name: サーバ起動時の文字コードセット
+  lineinfile:
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    insertafter: '\[mysqld\]'
+    line: "character-set-server=utf8mb4"
+
+- name: DB作成
+  mysql_db:
+    login_user: "{{ admin_user_name }}"
+    login_password: "{{ admin_user_password }}"
+    name: "{{ db_name }}"
+    state: present
+    encoding: utf8mb4
+
+- name: ユーザ追加
+  mysql_user:
+    login_user: "{{ admin_user_name }}"
+    login_password: "{{ admin_user_password }}"
+    name: "{{ user_name }}"
+    password: "{{ user_password }}"
+    priv: '{{ db_name }}.*:ALL'
+    state: present
+
+- name: mysqlサービス再起動
+  service:
+    name: mysql
+    enabled: yes
+    state: restarted

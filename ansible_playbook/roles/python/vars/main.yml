@@ -1,0 +1,7 @@
+---
+user_name: pypeach
+group_name: pypeach
+home_dir: /home/pypeach
+setting_files_dir: /home/pypeach/settings
+
+install_python_version: 3.7.2

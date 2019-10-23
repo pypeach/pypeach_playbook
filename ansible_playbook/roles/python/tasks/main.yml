@@ -1,0 +1,91 @@
+---
+- name: python関連のパッケージインストール
+  apt:
+    force_apt_get: yes
+    state: latest
+    name:
+      - python-pip
+      - libffi-dev
+      - libmysqlclient-dev
+      - gettext
+
+- block:
+    - name: セットアップ用ディレクトリ作成
+      file:
+        path: "{{ setting_files_dir }}"
+        owner: "{{ user_name }}"
+        group: "{{ group_name }}"
+        mode: 0755
+        state: directory
+
+    - name: セットアップ用ファイルをコピー
+      copy:
+        src: "{{ role_path }}/files/{{ item }}"
+        dest: "{{ setting_files_dir }}"
+        owner: "{{ user_name }}"
+        group: "{{ group_name }}"
+        mode: '0644'
+      with_items:
+        - requirements.txt
+
+    - name: pyenvの存在チェック
+      command: test -x {{ home_dir }}/.pyenv/bin/pyenv
+      register: pyenv_present
+      ignore_errors: yes
+
+    - name: pyenvリポジトリ更新
+      git:
+        repo: https://github.com/pyenv/pyenv.git
+        dest: "{{ home_dir }}/.pyenv"
+      when: pyenv_present is failed
+
+    - name: pyenv設定追加
+      lineinfile:
+        dest: "{{ home_dir }}/.bash_profile"
+        state: present
+        create: yes
+        line: "{{ item }}"
+      with_items:
+        - 'export PYENV_ROOT="$HOME/.pyenv"'
+        - 'export PATH="$PYENV_ROOT/bin:$PATH"'
+        - 'if command -v pyenv 1>/dev/null 2>&1; then'
+        - '  eval "$(pyenv init -)"'
+        - 'fi'
+      when: pyenv_present is failed
+
+    - name: bash_profile読込み
+      shell: /bin/bash -lc "source ~/.bash_profile"
+
+    - name: python{{ install_python_version }} インストール
+      shell: /bin/bash -lc "pyenv install {{ install_python_version }}"
+      when: pyenv_present is failed
+
+    - name: shim更新
+      shell: /bin/bash -lc "pyenv rehash"
+      when: pyenv_present is failed
+
+    - name: pythonインターセプタ変更
+      set_fact: ansible_python_interpreter={{ home_dir }}/.pyenv/shims/python
+
+    - name: python{{ install_python_version }}のglobal指定
+      shell: /bin/bash -lc "pyenv global {{ install_python_version }}"
+
+    - name: python{{ install_python_version }}のpipアップグレード
+      pip:
+        name: pip
+        state: latest
+
+    - name: python{{ install_python_version }}のrequirementsインストール
+      pip:
+        requirements: "{{ setting_files_dir }}/requirements.txt"
+
+    - name: pythonインターセプタ変更
+      set_fact: ansible_python_interpreter=/usr/bin/python
+
+    - name: セットアップ用ディレクトリ削除
+      file:
+        path: "{{ setting_files_dir }}"
+        state: absent
+
+  become: yes
+  become_user: "{{ user_name }}"
