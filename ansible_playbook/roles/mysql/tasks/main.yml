@@ -1,5 +1,5 @@
 ---
-- name: mysql関連のパッケージインストール
+- name: MySQL関連のパッケージインストール
   apt:
     force_apt_get: yes
     state: latest
@@ -25,7 +25,7 @@
     host_all: yes
     state: absent
 
-- name: mysql接続時の文字コードセット
+- name: MySQL接続時の文字コードセット
   lineinfile:
     path: /etc/mysql/conf.d/mysql.cnf
     insertafter: '\[mysqld\]'
@@ -54,7 +54,7 @@
     priv: '{{ db_name }}.*:ALL'
     state: present
 
-- name: mysqlサービス再起動
+- name: MySQLサービス再起動
   service:
     name: mysql
     enabled: yes
