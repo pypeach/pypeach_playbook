@@ -1,16 +1,15 @@
 # pypeach_playbook
 ## はじめに
-ansibleを使用して構成管理を実現するためのplaybookです。  
+Ansibleを使用して環境構築するためのplaybookです。  
 サンプルアプリケーションは[Gitリポジトリ](https://github.com/pypeach/pypeach_django.git)に関する環境構築を定義しています。  
 
 ### 前提事項
-linux(Ubuntu 18.04 LTS)で動作確認しています。  
+linux(Ubuntu 18.04 LTS)で動作を行います。  
 
 |  項目 | バージョン |
 |:------------|:------------|
 | python | 2.7.15+ |
 | ansible | 2.8.6 |
-
 
 ## プロジェクト構成
 プロジェクト構成は以下となります。  
@@ -59,8 +58,8 @@ ansible --version
 
 ```
 
-### ssh接続
-ansibleを使用して環境構築を行うサーバにssh接続します。  
+### SSH接続設定
+Ansibleを使用して環境構築を行うサーバにssh接続します。  
 
 ```
 # SSHの公開鍵と秘密鍵を作成する
@@ -78,7 +77,7 @@ ssh-add ~/.ssh/id_rsa
 playbookは[Gitリポジトリ](https://github.com/pypeach/pypeach_playbook.git)からクローンしてください。  
 
 ## playbook実行
-ansibleを使用してplaybookの定義を実行します。  
+Ansibleを使用してplaybookの定義を実行します。  
 
 ```
 # コマンドを実行します
