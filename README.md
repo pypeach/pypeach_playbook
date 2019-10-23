@@ -14,8 +14,6 @@ linux(Ubuntu 18.04 LTS)で動作確認しています。
 
 ## プロジェクト構成
 プロジェクト構成は以下となります。  
-TODO 以下はまだ
-djangoプロジェクトのデフォルトに一部リソースのフォルダを追加しました。 
 
 ```
 /$  
@@ -23,12 +21,6 @@ djangoプロジェクトのデフォルトに一部リソースのフォルダ�
   │  ├─management
   │  │  └─commands
   │  └─migrations
-  ├─locale
-  ├─log
-  ├─pypeach_django
-  ├─resources
-  ├─shell  
-  ├─template  
   └─.gitignore等  
   
 ```
@@ -46,9 +38,6 @@ djangoプロジェクトのデフォルトに一部リソースのフォルダ�
 ## セットアップ
 ansible及びplaybookのセットアップを行います。 
 
-### Gitリポジトリのクローン
-playbookは[Gitリポジトリ](https://github.com/pypeach/pypeach_playbook.git)からクローンしてください。  
-
 ### ansibleのインストール
 ansibleのインストールを行います。  
 
@@ -57,7 +46,7 @@ ansibleのインストールを行います。
 sudo apt-get update
 sudo apt install python-pip
 
-# pipコマンドでユーザ環境にansibleをインストールする
+# pipコマンドでカレントユーザにansibleをインストールする
 pip install ansible --user
 
 # bash_profileにパスを追加する
@@ -84,8 +73,10 @@ eval `ssh-agent`
 ssh-add ~/.ssh/id_rsa
 
 ```
+### Gitリポジトリのクローン
+playbookは[Gitリポジトリ](https://github.com/pypeach/pypeach_playbook.git)からクローンしてください。  
 
-### ansibleのコマンド実行
+## playbook実行
 ansibleを使用してplaybookの定義を実行します。  
 
 ```

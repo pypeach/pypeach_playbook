@@ -1,0 +1,2 @@
+# ターゲットのplaybookを指定します
+- import_playbook: app_server.yml

@@ -1,0 +1,11 @@
+galaxy_info:
+  author: t.ebinuma
+  license: license (GPL-2.0-or-later, MIT, etc)
+  min_ansible_version: 2.4
+  platforms:
+    - name: ubuntu
+      versions:
+        - all
+  galaxy_tags:
+
+dependencies:

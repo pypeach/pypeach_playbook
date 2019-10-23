@@ -1,0 +1,13 @@
+---
+group_name: pypeach
+group_gid: 1002
+user_name: pypeach
+user_uid: 1002
+user_password: pypeach
+user_ssh_key_passphrase: pypeach
+
+user_dir_info:
+ - dir_name: log
+   dir_mode: '0777'
+ - dir_name: pypeach
+   dir_mode: '0775'
