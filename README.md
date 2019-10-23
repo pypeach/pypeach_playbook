@@ -16,24 +16,25 @@ linux(Ubuntu 18.04 LTS)で動作確認しています。
 プロジェクト構成は以下となります。  
 
 ```
-/$  
-  ├─app_pypeach_django
-  │  ├─management
-  │  │  └─commands
-  │  └─migrations
-  └─.gitignore等  
+/ansible_playbook
+├─group_vars
+├─roles
+│   ├─account
+│   ├─mysql
+│   └─python
+├─ app_server.yml
+├─ inventory
+└─ site.yml
   
 ```
 
 |  項目 | 説明 |
 |:------------|:------------|
-| app_pypeach_django | アプリケーションのパッケージ |
-| log| ログ出力先のフォルダ |
-| locale| getTextで使用するメッセージを格納するフォルダ |
-| pypeach_django| django関連の設定を定義するフォルダ |
-| resources| 設定ファイルを格納するフォルダ |
-| shell| 起動シェルスクリプトを格納するフォルダ |
-| template| テンプレートファイル（メールテンプレート等）を格納するフォルダ |
+| group_vars | グループ共通の共通変数を定義したファイルを格納するディレクトリ |
+| roles| playbookを格納するディレクトリ |
+| app_server.yml| サーバで実行するplaybookを定義する |
+| inventory| サーバ接続先を定義する |
+| site.yml| マスタのplaybook。サーバ単位のplaybookのインポートを定義する |
 
 ## セットアップ
 ansible及びplaybookのセットアップを行います。 

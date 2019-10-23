@@ -9,5 +9,7 @@ user_ssh_key_passphrase: pypeach
 user_dir_info:
  - dir_name: log
    dir_mode: '0777'
- - dir_name: pypeach
+ - dir_name: pypeach_django
+   dir_mode: '0775'
+ - dir_name: pypeach_django/app_pypeach_django/migrations
    dir_mode: '0775'
