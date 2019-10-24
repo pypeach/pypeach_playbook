@@ -67,6 +67,7 @@
 - name: Jenkinsサービス再起動
   service:
     name: jenkins
+    enabled: yes
     state: restarted
 
 - name: ApacheとJenkins連携の設定ファイル作成
