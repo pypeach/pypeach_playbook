@@ -1,5 +1,5 @@
 ---
-- name: python関連のパッケージインストール
+- name: Python関連のパッケージインストール
   apt:
     force_apt_get: yes
     state: latest
@@ -35,10 +35,10 @@
         - 'fi'
       when: pyenv_present is failed
 
-    - name: bash_profile読込み
+    - name: bash_profile読み込み
       shell: /bin/bash -lc "source ~/.bash_profile"
 
-    - name: python{{ install_python_version }} インストール
+    - name: Python{{ install_python_version }} インストール
       shell: /bin/bash -lc "pyenv install {{ install_python_version }}"
       when: pyenv_present is failed
 
@@ -46,18 +46,18 @@
       shell: /bin/bash -lc "pyenv rehash"
       when: pyenv_present is failed
 
-    - name: pythonインターセプタ変更
+    - name: Pythonインターセプタ変更
       set_fact: ansible_python_interpreter={{ home_dir }}/.pyenv/shims/python
 
     - name: python{{ install_python_version }}のglobal指定
       shell: /bin/bash -lc "pyenv global {{ install_python_version }}"
 
-    - name: python{{ install_python_version }}のpipアップグレード
+    - name: Python{{ install_python_version }}のpipアップグレード
       pip:
         name: pip
         state: latest
 
-    - name: python{{ install_python_version }}のモジュールインストール
+    - name: Python{{ install_python_version }}のモジュールインストール
       pip:
         name:
           - beautifulsoup4==4.6.0
@@ -71,7 +71,7 @@
           - pytest==4.1.1
           - pytest-django==3.4.5
 
-    - name: pythonインターセプタ変更
+    - name: Pythonインターセプタ変更
       set_fact: ansible_python_interpreter=/usr/bin/python
 
   become: yes

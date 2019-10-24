@@ -1,9 +1,2 @@
 ---
-user_domain: webmaster@mocjax.com
-
-web_user_name: virgo_web
-user_home: /home/mocjax
-wsgi_file_path: /home/mocjax/virgo_web/virgo_web/wsgi.py
-
-# apacheのwsgi.soがpython3.6をバンドルしているためdjangoのwebアプリは3.6を参照する
-python_path: /home/mocjax/.pyenv/versions/3.6.3/lib/python3.6/site-packages
+user_domain: webmaster@pypeach.com

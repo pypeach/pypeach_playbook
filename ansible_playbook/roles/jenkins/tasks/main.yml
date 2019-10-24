@@ -8,12 +8,12 @@
       - git
       - wget
 
-- name: jenkinsのapt-key追加
+- name: Jenkinsのapt-key追加
   apt_key:
     url: https://pkg.jenkins.io/debian/jenkins.io.key
     state: present
 
-- name: jenkinsのダウンロードリポジトリ追加
+- name: Jenkinsのダウンロードリポジトリ追加
   lineinfile:
     path: /etc/apt/sources.list.d/jenkins.list
     state: present
@@ -23,7 +23,7 @@
     create: yes
     line: 'deb http://pkg.jenkins.io/debian-stable binary/'
 
-- name: jenkinsインストール
+- name: Jenkinsインストール
   apt:
     force_apt_get: yes
     update_cache: yes
@@ -31,7 +31,7 @@
     name:
       - jenkins
 
-- name: HeapSize追加
+- name: ヒープサイズ追加
   lineinfile:
     dest: /etc/default/jenkins
     regexp: '^JAVA_ARGS'
@@ -64,12 +64,12 @@
     state: present
     line: 'jenkins ALL=(ALL) NOPASSWD: ALL'
 
-- name: jenkinsサービス再起動
+- name: Jenkinsサービス再起動
   service:
     name: jenkins
     state: restarted
 
-- name: jenkins⇔apache連携の設定ファイル作成
+- name: ApacheとJenkins連携の設定ファイル作成
   template:
     src: "{{ role_path }}/files/jenkins.conf"
     dest: /etc/apache2/sites-available/jenkins.conf
@@ -90,7 +90,7 @@
 - name: proxy有効化
   command: a2ensite jenkins
 
-- name: Apache2サービス再起動
+- name: Apacheサービス再起動
   service:
     name: apache2
     state: restarted
