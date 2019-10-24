@@ -12,34 +12,13 @@ linux(Ubuntu 18.04 LTS)で動作を行います。
 | ansible | 2.8.6 |
 
 ## プロジェクト構成
-プロジェクト構成は以下となります。  
-
-```
-/ansible_playbook
-├─group_vars
-├─roles
-│   ├─account
-│   ├─mysql
-│   └─python
-├─ app_server.yml
-├─ inventory
-└─ site.yml
-  
-```
-
-|  項目 | 説明 |
-|:------------|:------------|
-| group_vars | グループ共通の共通変数を定義したファイルを格納するディレクトリ |
-| roles| playbookを格納するディレクトリ |
-| app_server.yml| サーバで実行するplaybookを定義する |
-| inventory| サーバ接続先を定義する |
-| site.yml| マスタのplaybook。サーバ単位のplaybookのインポートを定義する |
+詳細は[アプリケーション環境構築(Ansible)](https://qiita.com/tz2i5i_ebinuma/items/78a1f74ff60cd41ae126)を参照ください。 
 
 ## セットアップ
 ansible及びplaybookのセットアップを行います。 
 
 ### ansibleのインストール
-ansibleのインストールを行います。  
+ansibleのインストールを行います。
 
 ```
 # python-pipをインストールする
@@ -59,7 +38,7 @@ ansible --version
 ```
 
 ### SSH接続設定
-Ansibleを使用して環境構築を行うサーバにssh接続します。  
+Ansibleを使用して環境構築を行うサーバにssh接続します。
 
 ```
 # SSHの公開鍵と秘密鍵を作成する
@@ -74,10 +53,10 @@ ssh-add ~/.ssh/id_rsa
 
 ```
 ### Gitリポジトリのクローン
-playbookは[Gitリポジトリ](https://github.com/pypeach/pypeach_playbook.git)からクローンしてください。  
+playbookは[Gitリポジトリ](https://github.com/pypeach/pypeach_playbook.git)からクローンしてください。 
 
 ## playbook実行
-Ansibleを使用してplaybookの定義を実行します。  
+Ansibleを使用してplaybookの定義を実行します。 
 
 ```
 # コマンドを実行します
