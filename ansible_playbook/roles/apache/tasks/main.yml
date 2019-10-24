@@ -1,0 +1,26 @@
+---
+- name: apache2関連のパッケージインストール
+  apt:
+    force_apt_get: yes
+    state: latest
+    name:
+      - apache2
+
+- name: 管理者ドメイン変更
+  lineinfile:
+    dest: /etc/apache2/sites-available/000-default.conf
+    regexp: "ServerAdmin"
+    line: '        ServerAdmin {{ user_domain }}'
+    state: present
+
+- name: デフォルトのDocumentRoot無効化
+  lineinfile:
+    dest: /etc/apache2/sites-available/000-default.conf
+    regexp: "DocumentRoot"
+    line: "        #DocumentRoot /var/www/html"
+    state: present
+
+- name: apacheサービス再起動
+  service:
+    name: apache2
+    state: restarted

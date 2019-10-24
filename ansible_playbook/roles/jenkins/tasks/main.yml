@@ -1,0 +1,96 @@
+---
+- name: セットアップで使用するパッケージインストール
+  apt:
+    force_apt_get: yes
+    state: latest
+    name:
+      - openjdk-8-jdk
+      - git
+      - wget
+
+- name: jenkinsのapt-key追加
+  apt_key:
+    url: https://pkg.jenkins.io/debian/jenkins.io.key
+    state: present
+
+- name: jenkinsのダウンロードリポジトリ追加
+  lineinfile:
+    path: /etc/apt/sources.list.d/jenkins.list
+    state: present
+    owner: root
+    group: root
+    mode: '0644'
+    create: yes
+    line: 'deb http://pkg.jenkins.io/debian-stable binary/'
+
+- name: jenkinsインストール
+  apt:
+    force_apt_get: yes
+    update_cache: yes
+    state: latest
+    name:
+      - jenkins
+
+- name: HeapSize追加
+  lineinfile:
+    dest: /etc/default/jenkins
+    regexp: '^JAVA_ARGS'
+    line: 'JAVA_ARGS="-Xmx2048m -XX:MaxPermSize=512m -Djava.awt.headless=true"'
+    state: present
+
+- name: コンテキストパス変更
+  lineinfile:
+    dest: /etc/default/jenkins
+    regexp: '^PREFIX'
+    line: "PREFIX=/{{ jenkins_context_path }}"
+    state: present
+
+- name: JAVA_HOME追加
+  lineinfile:
+    dest: /etc/default/jenkins
+    line: "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64"
+    state: present
+
+- name: 起動オプション変更
+  lineinfile:
+    dest: /etc/default/jenkins
+    regexp: '^JENKINS_ARGS'
+    line: 'JENKINS_ARGS="--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT --prefix=$PREFIX"'
+    state: present
+
+- name: sudo権限付与
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    line: 'jenkins ALL=(ALL) NOPASSWD: ALL'
+
+- name: jenkinsサービス再起動
+  service:
+    name: jenkins
+    state: restarted
+
+- name: jenkins⇔apache連携の設定ファイル作成
+  template:
+    src: "{{ role_path }}/files/jenkins.conf"
+    dest: /etc/apache2/sites-available/jenkins.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: proxyモジュール追加
+  apache2_module:
+    state: present
+    name: proxy
+
+- name: proxy_httpモジュール追加
+  apache2_module:
+    state: present
+    name: proxy_http
+
+- name: proxy有効化
+  command: a2ensite jenkins
+
+- name: Apache2サービス再起動
+  service:
+    name: apache2
+    state: restarted
