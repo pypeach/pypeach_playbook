@@ -1,5 +1,5 @@
 ---
-- name: apache2関連のパッケージインストール
+- name: Apache関連のパッケージインストール
   apt:
     force_apt_get: yes
     state: latest
@@ -20,7 +20,7 @@
     line: "        #DocumentRoot /var/www/html"
     state: present
 
-- name: apacheサービス再起動
+- name: Apacheサービス再起動
   service:
     name: apache2
     state: restarted
