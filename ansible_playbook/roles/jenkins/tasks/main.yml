@@ -67,6 +67,7 @@
 - name: Jenkinsサービス再起動
   service:
     name: jenkins
+    enabled: yes
     state: restarted
 
 - name: ApacheとJenkins連携の設定ファイル作成
@@ -77,6 +78,9 @@
     group: root
     mode: '0644'
 
+- name: 設定ファイル有効化
+  command: a2ensite jenkins
+
 - name: proxyモジュール追加
   apache2_module:
     state: present
@@ -86,9 +90,6 @@
   apache2_module:
     state: present
     name: proxy_http
-
-- name: proxy有効化
-  command: a2ensite jenkins
 
 - name: Apacheサービス再起動
   service:
